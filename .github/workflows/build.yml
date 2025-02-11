@@ -47,14 +47,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cabal-
 
-      - name: Debug Build Output
-        run: find dist-newstyle -type f -name "hasura" || echo "hasura not found"
-
-      - name: Move Binary to bin
-        run: |
-          mkdir -p bin
-          cp $(find dist-newstyle -type f -name "hasura" | head -n 1) bin/hasura
-
       - name: Update Cabal Version
         run: |
           ghcup install cabal 3.12
@@ -69,6 +61,14 @@ jobs:
       - name: Build Hasura
         run: |
           make build
+
+      - name: Debug Build Output
+        run: find dist-newstyle -type f -name "hasura" || echo "hasura not found"
+
+      - name: Move Binary to bin
+        run: |
+          mkdir -p bin
+          cp $(find dist-newstyle -type f -name "hasura" | head -n 1) bin/hasura
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
