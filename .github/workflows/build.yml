@@ -49,6 +49,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cabal-
 
+#      - name: Cache Haskell Dependencies
+#        uses: actions/cache@v3
+#        with:
+#          path: |
+#            ~/.cabal/store
+#            ~/.ghc
+#            dist-newstyle
+#          key: ${{ runner.os }}-haskell-${{ hashFiles('cabal.project.freeze') }}
+#          restore-keys: |
+#            ${{ runner.os }}-haskell-
+
       - name: Update Cabal Version
         run: |
           ghcup install cabal 3.12
@@ -68,6 +79,9 @@ jobs:
         run: |
           echo "Checking dist-newstyle for hasura binary..."
           find dist-newstyle -type f -name "hasura" || echo "hasura not found"
+
+      - name: Debug Cabal Build Output
+        run: find dist-newstyle -type f | tee build_files.log
 
       - name: Move Binary to bin
         run: |
