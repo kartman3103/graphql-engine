@@ -68,6 +68,9 @@ jobs:
           cabal build exe:graphql-engine
         working-directory: server
 
+      - name: Copy README.md to server/
+        run: cp README.md server/
+
       - name: Build executable binary
         run: |
           cabal install --installdir=/tmp/.cabal/bin
