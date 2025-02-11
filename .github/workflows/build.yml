@@ -65,7 +65,8 @@ jobs:
       - name: Build GraphQL Engine
         run: |
           cabal configure
-          cabal build
+          cabal build exe:graphql-engine
+        working-directory: server
 
       - name: Build executable binary
         run: |
