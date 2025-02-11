@@ -55,18 +55,24 @@ jobs:
           ghcup set cabal 3.12
           cabal --version
 
-      - name: Install Haskell Dependencies
-        run: |
-          cabal update
-          cabal build all
+#      - name: Install Haskell Dependencies
+#        run: |
+#          cabal update
+#          cabal build all
 
-#---------------------------------------------------
+      - name: Install dependencies
+        run: cabal update && cabal build --only-dependencies --project-file=server/graphql-engine.cabal
 
-      - name: Build GraphQL Engine
-        run: |
-          cabal configure
-          cabal build exe:graphql-engine
-        working-directory: server
+#      - name: Build GraphQL Engine
+#        run: |
+#          cabal configure
+#          cabal build exe:graphql-engine
+#        working-directory: server
+#
+#
+#      - name: Build the project
+#        run: cabal build --project-file=server/graphql-engine.cabal
+
 
       - name: Copy README.md to server/
         run: cp README.md server/
