@@ -37,7 +37,7 @@ jobs:
       - name: Install Haskell Dependencies
         run: |
           cabal update
-          cabal install --only-dependencies
+          cabal build all
 
       - name: Build Hasura
         run: |
