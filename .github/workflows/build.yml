@@ -62,6 +62,7 @@ jobs:
 
       - name: Install dependencies
         run: cabal update && cabal build --only-dependencies --project-file=server/graphql-engine.cabal
+        working-directory: server
 
 #      - name: Build GraphQL Engine
 #        run: |
