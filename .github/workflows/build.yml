@@ -1,12 +1,11 @@
 name: Build Hasura Binary
 on:
   push:
-    branches:
-      - main
+    branches: [ "**" ]
   pull_request:
-    branches:
-      - main
+    branches: [ "**" ]
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,7 +26,18 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt update
-          sudo apt install -y gcc make musl-dev
+          sudo apt install -y gcc make musl-dev curl
+
+      - name: Setup Haskell (GHC & Cabal)
+        uses: haskell/actions/setup@v2
+        with:
+          ghc-version: '9.2'
+          cabal-version: '3.6'
+
+      - name: Install Haskell Dependencies
+        run: |
+          cabal update
+          cabal install --only-dependencies
 
       - name: Build Hasura
         run: |
