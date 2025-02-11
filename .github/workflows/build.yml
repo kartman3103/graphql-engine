@@ -86,13 +86,24 @@ jobs:
       - name: Debug Cabal Build Output
         run: find dist-newstyle -type f | tee build_files.log
 
+#      - name: Move Binary to bin
+#        run: |
+#          mkdir -p bin
+#          if ! cp "$(cabal list-bin exe:hasura)" bin/hasura; then
+#            echo "Failed to copy hasura binary"
+#            exit 1
+#          fi
+
       - name: Move Binary to bin
         run: |
           mkdir -p bin
-          if ! cp "$(cabal list-bin exe:hasura)" bin/hasura; then
-            echo "Failed to copy hasura binary"
+          BINARY_PATH=$(find dist-newstyle -type f -name "hasura" | head -n 1)
+          if [ -z "$BINARY_PATH" ]; then
+            echo "Error: hasura binary not found"
             exit 1
           fi
+          cp "$BINARY_PATH" bin/hasura
+
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
