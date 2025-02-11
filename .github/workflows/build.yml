@@ -32,7 +32,13 @@ jobs:
         uses: haskell/actions/setup@v2
         with:
           ghc-version: '9.2'
-          cabal-version: '3.6'
+          cabal-version: '3.12'
+
+      - name: Update Cabal Version
+        run: |
+          ghcup install cabal 3.12
+          ghcup set cabal 3.12
+          cabal --version
 
       - name: Install Haskell Dependencies
         run: |
