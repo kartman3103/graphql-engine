@@ -78,7 +78,10 @@ jobs:
       - name: Debug Build Output
         run: |
           echo "Checking dist-newstyle for hasura binary..."
-          find dist-newstyle -type f -name "hasura" || echo "hasura not found"
+          if ! find dist-newstyle -type f -name "hasura"; then
+            echo "hasura binary not found"
+            exit 1
+          fi
 
       - name: Debug Cabal Build Output
         run: find dist-newstyle -type f | tee build_files.log
@@ -86,7 +89,10 @@ jobs:
       - name: Move Binary to bin
         run: |
           mkdir -p bin
-          cp "$(cabal list-bin exe:hasura)" bin/hasura || echo "Binary not found"
+          if ! cp "$(cabal list-bin exe:hasura)" bin/hasura; then
+            echo "Failed to copy hasura binary"
+            exit 1
+          fi
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
