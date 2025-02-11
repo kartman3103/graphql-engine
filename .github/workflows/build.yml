@@ -23,6 +23,9 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Set CURRENT_VERSION
+        run: echo "12345" > server/CURRENT_VERSION
+
       - name: Install Dependencies
         run: |
           sudo apt update
