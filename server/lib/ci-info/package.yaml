@@ -6,9 +6,6 @@ author:              "Ajeet D'Souza"
 maintainer:          "build@hasura.io"
 copyright:           "2019 Hasura Inc."
 
-extra-source-files:
-- README.md
-
 description:         Please see the README on GitHub at <https://github.com/hasura/ci-info-hs#readme>
 
 dependencies:

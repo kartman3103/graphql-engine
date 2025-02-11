@@ -3,7 +3,6 @@ name: api-tests
 version: 1.0.0
 build-type: Simple
 copyright: Hasura Inc.
-extra-source-files: README.md
 
 common common-all
   ghc-options:
