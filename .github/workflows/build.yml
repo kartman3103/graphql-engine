@@ -1,4 +1,5 @@
 name: Build Hasura Binary
+
 on:
   push:
     branches: [ "**" ]
@@ -9,6 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -26,7 +28,7 @@ jobs:
       - name: Set CURRENT_VERSION
         run: echo "12345" > server/CURRENT_VERSION
 
-      - name: Install Dependencies
+      - name: Install System Dependencies
         run: |
           sudo apt update
           sudo apt install -y gcc make musl-dev curl unixodbc-dev
@@ -63,12 +65,14 @@ jobs:
           make build
 
       - name: Debug Build Output
-        run: find dist-newstyle -type f -name "hasura" || echo "hasura not found"
+        run: |
+          echo "Checking dist-newstyle for hasura binary..."
+          find dist-newstyle -type f -name "hasura" || echo "hasura not found"
 
       - name: Move Binary to bin
         run: |
           mkdir -p bin
-          cp $(find dist-newstyle -type f -name "hasura" | head -n 1) bin/hasura
+          cp "$(cabal list-bin exe:hasura)" bin/hasura || echo "Binary not found"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
