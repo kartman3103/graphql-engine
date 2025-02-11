@@ -73,7 +73,7 @@ jobs:
 
       # Step 6: Upload the binary as an artifact (optional)
       - name: Upload binary artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: graphql-engine-binary
           path: /tmp/.cabal/bin/graphql-engine
