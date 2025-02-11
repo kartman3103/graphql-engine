@@ -49,17 +49,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cabal-
 
-#      - name: Cache Haskell Dependencies
-#        uses: actions/cache@v3
-#        with:
-#          path: |
-#            ~/.cabal/store
-#            ~/.ghc
-#            dist-newstyle
-#          key: ${{ runner.os }}-haskell-${{ hashFiles('cabal.project.freeze') }}
-#          restore-keys: |
-#            ${{ runner.os }}-haskell-
-
       - name: Update Cabal Version
         run: |
           ghcup install cabal 3.12
@@ -71,42 +60,21 @@ jobs:
           cabal update
           cabal build all
 
-      - name: Build Hasura
+#---------------------------------------------------
+
+      - name: Build GraphQL Engine
         run: |
-          cabal update
-          cabal build exe:server
+          cabal configure
+          cabal build
 
-      - name: Debug Build Output
+      - name: Build executable binary
         run: |
-          echo "Checking dist-newstyle for hasura binary..."
-          if ! find dist-newstyle -type f -name "hasura"; then
-            echo "hasura binary not found"
-            exit 1
-          fi
+          cabal install --installdir=/tmp/.cabal/bin
 
-      - name: Debug Cabal Build Output
-        run: find dist-newstyle -type f | tee build_files.log
-
-#      - name: Move Binary to bin
-#        run: |
-#          mkdir -p bin
-#          if ! cp "$(cabal list-bin exe:hasura)" bin/hasura; then
-#            echo "Failed to copy hasura binary"
-#            exit 1
-#          fi
-
-      - name: Move Binary to bin
-        run: |
-          mkdir -p bin
-          BINARY_PATH=$(find dist-newstyle -type f -name "server" | head -n 1)
-          if [ -z "$BINARY_PATH" ]; then
-            echo "Error: server binary not found"
-            exit 1
-          fi
-          cp "$BINARY_PATH" bin/server
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+      # Step 6: Upload the binary as an artifact (optional)
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v3
         with:
-          name: server-binary
-          path: server/hasura
+          name: graphql-engine-binary
+          path: /tmp/.cabal/bin/graphql-engine
+
