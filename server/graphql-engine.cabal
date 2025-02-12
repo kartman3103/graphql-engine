@@ -1046,7 +1046,6 @@ library
 
 executable graphql-engine
   import: common-all, common-exe
-  import: preload-mimalloc
 
   if flag(optimize-hasura)
     ghc-options:
