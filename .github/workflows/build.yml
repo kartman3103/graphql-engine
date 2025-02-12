@@ -10,24 +10,17 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest]
         arch: [x86_64]
         include:
           - os: ubuntu-latest
             target: "linux"
-          - os: windows-latest
-            target: "windows"
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           persist-credentials: false
           fetch-depth: 0
-
-      - name: Enable Long Paths
-        run: |
-          git config --local core.longpaths true
 
       - name: Setup Go
         uses: actions/setup-go@v5
@@ -47,11 +40,6 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y gcc make musl-dev curl unixodbc-dev
-
-      - name: Install System Dependencies (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          choco install mingw make
 
       - name: Setup Haskell (GHC & Cabal)
         uses: haskell/actions/setup@v2
