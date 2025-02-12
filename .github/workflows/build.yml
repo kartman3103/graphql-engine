@@ -59,7 +59,7 @@ jobs:
       - name: Install Haskell Dependencies
         run: |
           cabal update
-          cabal build all
+          cabal install --only-dependencies
 
       - name: Build GraphQL Engine
         run: |
