@@ -59,22 +59,18 @@ jobs:
       - name: Install Haskell Dependencies
         run: |
           cabal update
-          cabal build all --project-file=../cabal.project
-        working-directory: server
+          cabal build all
 
       - name: Build GraphQL Engine
         run: |
-          cabal configure --project-file=../cabal.project
-          cabal build exe:graphql-engine --project-file=../cabal.project
-        working-directory: server
+          cabal build exe:graphql-engine
 
       - name: Copy README.md to server/
         run: cp README.md server/
 
       - name: Build executable binary
         run: |
-          cabal install --installdir=/tmp/.cabal/bin --project-file=../cabal.project --overwrite-policy=always
-        working-directory: server
+          cabal install exe:graphql-engine --installdir=/tmp/.cabal/bin
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
