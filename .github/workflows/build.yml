@@ -3,13 +3,22 @@ name: Build Hasura Binary
 on:
   push:
     branches: [ "**" ]
-#  pull_request:
-#    branches: [ "**" ]
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        arch: [x86_64]
+        include:
+          - os: ubuntu-latest
+            target: "linux"
+          - os: macos-latest
+            target: "darwin"
+          - os: windows-latest
+            target: "windows"
 
     steps:
       - name: Checkout Repository
@@ -28,10 +37,16 @@ jobs:
       - name: Set CURRENT_VERSION
         run: echo "12345" > server/CURRENT_VERSION
 
-      - name: Install System Dependencies
+      - name: Install System Dependencies (Linux)
+        if: runner.os == 'Linux'
         run: |
           sudo apt update
           sudo apt install -y gcc make musl-dev curl unixodbc-dev
+
+      - name: Install System Dependencies (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          choco install mingw make
 
       - name: Setup Haskell (GHC & Cabal)
         uses: haskell/actions/setup@v2
@@ -50,31 +65,29 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cabal-
 
-      - name: Update Cabal Version
-        run: |
-          ghcup install cabal 3.12
-          ghcup set cabal 3.12
-          cabal --version
-
       - name: Install Haskell Dependencies
         run: |
           cabal update
           cabal build all --only-dependencies
 
       - name: Build GraphQL Engine
-        run: |
-          cabal build exe:graphql-engine
+        run: cabal build exe:graphql-engine
 
       - name: Copy README.md to server/
         run: cp README.md server/
 
       - name: Build executable binary
         run: |
-          cabal install exe:graphql-engine --installdir=/tmp/.cabal/bin
+          mkdir -p artifacts
+          cabal install exe:graphql-engine --installdir=artifacts
+
+      - name: Rename binary for platform
+        run: |
+          mv artifacts/graphql-engine artifacts/graphql-engine-${{ matrix.target }} || mv artifacts/graphql-engine.exe artifacts/graphql-engine-${{ matrix.target }}.exe
+        shell: bash
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
-          name: graphql-engine-binary
-          path: /tmp/.cabal/bin/graphql-engine
-
+          name: graphql-engine-${{ matrix.target }}
+          path: artifacts/graphql-engine*
