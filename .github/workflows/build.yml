@@ -45,6 +45,7 @@ jobs:
           path: |
             ~/.cabal/store
             dist-newstyle
+            server/dist-newstyle
           key: ${{ runner.os }}-cabal-${{ hashFiles('cabal.project.freeze') }}
           restore-keys: |
             ${{ runner.os }}-cabal-
@@ -58,12 +59,12 @@ jobs:
       - name: Install Haskell Dependencies
         run: |
           cabal update
-          cabal build all
+          cabal build --only-dependencies
 
       - name: Build GraphQL Engine
         run: |
-          cabal configure
-          cabal build exe:graphql-engine
+          cabal configure --project-file=../cabal.project
+          cabal build exe:graphql-engine --project-file=../cabal.project
         working-directory: server
 
       - name: Copy README.md to server/
@@ -71,7 +72,7 @@ jobs:
 
       - name: Build executable binary
         run: |
-          cabal install --installdir=/tmp/.cabal/bin
+          cabal install --installdir=/tmp/.cabal/bin --project-file=../cabal.project --overwrite-policy=always
         working-directory: server
 
       - name: Upload binary artifact
