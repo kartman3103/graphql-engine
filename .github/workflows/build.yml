@@ -23,6 +23,12 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Enable Long Paths
+        run: git config --system core.longpaths true
 
       - name: Setup Go
         uses: actions/setup-go@v5
