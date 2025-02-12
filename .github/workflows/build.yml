@@ -59,7 +59,8 @@ jobs:
       - name: Install Haskell Dependencies
         run: |
           cabal update
-          cabal build --only-dependencies
+          cabal build all --project-file=../cabal.project
+        working-directory: server
 
       - name: Build GraphQL Engine
         run: |
