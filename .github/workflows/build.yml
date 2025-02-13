@@ -107,6 +107,12 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
+      - name: List files server
+        run: ls -la server
+
+      - name: List files root
+        run: ls -la 
+
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
