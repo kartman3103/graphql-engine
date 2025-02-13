@@ -82,8 +82,8 @@ jobs:
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
-          name: graphql-engine
-          path: artifacts/graphql-engine
+          name: graphql-engine-${{ matrix.target }}
+          path: artifacts/graphql-engine*
 
   docker:
     needs: build
@@ -92,17 +92,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Debug Available Artifacts
-        run: ls -la /home/runner/work/_temp/
-
       - name: Download Built Binary
         uses: actions/download-artifact@v4
         with:
-          name: graphql-engine
+          name: graphql-engine-linux
           path: artifacts/
-
-      - name: List files artifacts
-        run: ls -la artifacts
 
       - name: Make Binary Executable
         run: chmod +x artifacts/graphql-engine-linux
@@ -112,12 +106,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
-
-      - name: List files server
-        run: ls -la server
-
-      - name: List files root
-        run: ls -la 
 
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
