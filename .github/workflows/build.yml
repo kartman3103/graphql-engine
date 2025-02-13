@@ -92,6 +92,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Debug Available Artifacts
+        run: ls -la /home/runner/work/_temp/
+
       - name: Download Built Binary
         uses: actions/download-artifact@v4
         with:
