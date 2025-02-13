@@ -16,7 +16,7 @@ services:
       - ./docker-compose/postgres/init.sh:/docker-entrypoint-initdb.d/init-hasura.sh:ro
 
   graphql-engine:
-    image: graphql-engine:latest
+    image: "${DOCKER_HUB_USERNAME}/graphql-engine:latest"
     depends_on:
       - postgres
     ports:
