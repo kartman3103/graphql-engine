@@ -98,6 +98,9 @@ jobs:
           name: graphql-engine-linux
           path: artifacts/
 
+      - name: List downloaded artifacts
+        run: ls -l artifacts/
+
       - name: Make Binary Executable
         run: chmod +x artifacts/graphql-engine-linux
 
