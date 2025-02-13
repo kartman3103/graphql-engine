@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y software-properties-common \
     && apt-get update && apt-get install -y libstdc++6
 
 # Копируем бинарник
-COPY artifacts/graphql-engine-linux /bin/graphql-engine-linux
-RUN chmod +x /bin/graphql-engine-linux
+COPY artifacts/graphql-engine /bin/graphql-engine
+RUN chmod +x /bin/graphql-engine
 
-CMD ["/bin/graphql-engine-linux", "serve"]
+CMD ["/bin/graphql-engine", "serve"]
