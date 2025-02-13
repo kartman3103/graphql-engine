@@ -2,7 +2,9 @@ name: Build Hasura Binary
 
 on:
   push:
-    branches: [ "**" ]
+#    branches: [ "**" ]
+    tags:
+      - "*"
   workflow_dispatch:
 
 jobs:
@@ -25,8 +27,8 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Set CURRENT_VERSION
-        run: echo "12345" > server/CURRENT_VERSION
+      - name: Set CURRENT_VERSION from tag
+        run: echo "${GITHUB_REF#refs/tags/}" > server/CURRENT_VERSION
 
       - name: Install System Dependencies
         run: |
