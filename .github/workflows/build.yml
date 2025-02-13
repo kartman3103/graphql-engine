@@ -113,7 +113,7 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
-          context: server
+          context: .
           file: server/Dockerfile
           push: true
           tags: ${{ github.repository_owner }}/graphql-engine:latest
