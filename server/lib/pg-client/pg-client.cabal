@@ -10,7 +10,6 @@ license:            Apache-2.0
 license-file:       LICENSE
 category:           Database
 build-type:         Simple
-extra-source-files: README.md
 tested-with:        GHC ==8.10.7 || ==9.2.2
 
 source-repository head

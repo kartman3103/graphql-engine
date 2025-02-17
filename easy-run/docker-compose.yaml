@@ -1,0 +1,70 @@
+name: hge-manual-tests
+
+services:
+  postgres:
+    extends:
+      file: docker-compose/databases.yaml
+      service: postgres
+    ports:
+      - "65002:5432"
+    environment:
+      POSTGRES_USER: "hasura"
+      POSTGRES_PASSWORD: "hasura"
+      POSTGRES_DB: "hasura"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./docker-compose/postgres/init.sh:/docker-entrypoint-initdb.d/init-hasura.sh:ro
+
+  graphql-engine:
+    image: "${DOCKER_HUB_USERNAME}/graphql-engine:latest"
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: "postgres://hasura:hasura@postgres:5432/hasura"
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_ADMIN_SECRET: "mysecretkey"
+
+  citus:
+    extends:
+      file: docker-compose/databases.yaml
+      service: citus
+    ports:
+      - "65004:5432"
+    environment:
+      POSTGRES_USER: "hasura"
+      POSTGRES_PASSWORD: "hasura"
+      POSTGRES_DB: "hasura"
+    volumes:
+      - citus-data:/var/lib/postgresql/data
+      - ./docker-compose/postgres/init.sh:/docker-entrypoint-initdb.d/init-hasura.sh:ro
+
+  cockroach:
+    extends:
+      file: docker-compose/databases.yaml
+      service: cockroach
+    ports:
+      - "65008:26257"
+    environment:
+      COCKROACH_USER: "root"
+      COCKROACH_DATABASE: "hasura"
+    volumes:
+      - cockroach-data:/cockroach/cockroach-data
+
+  sqlserver:
+    extends:
+      file: docker-compose/databases.yaml
+      service: sqlserver
+    ports:
+      - "65003:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql
+
+volumes:
+  citus-data:
+  cockroach-data:
+  mssql-data:
+  postgres-data:

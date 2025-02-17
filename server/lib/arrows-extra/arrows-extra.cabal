@@ -3,7 +3,6 @@ name: arrows-extra
 version: 1.0.0
 build-type: Simple
 copyright: Hasura Inc.
-extra-source-files: README.md
 
 library
   hs-source-dirs: src
